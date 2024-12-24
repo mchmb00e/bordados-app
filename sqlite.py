@@ -13,7 +13,6 @@ class Bordado(Base):
     ubicacion = Column(String)
     favorito = Column(Boolean)
     categoria = Column(Integer)
-    imagen = Column(String, nullable=True)
 
 class Categoria(Base):
     __tablename__ = 'categorias'
@@ -53,3 +52,28 @@ def id_por_nombre(nombre: str):
     global session
     ids = session.query(Bordado).filter(Bordado.nombre == nombre).all()
     return ids[0].id
+
+def cambiar_nombre(id: int, nombre: str):
+    global session
+    if session.query(Bordado).filter(Bordado.nombre == nombre).first() is not None:
+        return False
+    else:
+        record = session.query(Bordado).get(id)
+        setattr(record, 'nombre', nombre)
+        session.commit()
+        return True
+    
+def obtener(id: int):
+    global session
+    record = session.query(Bordado).get(id)
+    if record:
+        return record
+    else:
+        return None
+        
+
+def actualizar_favorito(id: int):
+    global session
+    record = session.query(Bordado).get(id)
+    setattr(record, 'favorito', False if record.favorito else True)
+    session.commit()
