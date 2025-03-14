@@ -1,8 +1,23 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from model import session, Pattern
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Configurar los orígenes permitidos
+origins = [
+    "*",
+]
+
+# Añadir middleware CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],  # Métodos HTTP permitidos
+    allow_headers=["*"],  # Encabezados permitidos, puede ajustarse según tus necesidades
+)
 
 @app.get("/pattern/favorites")
 def favorites():
